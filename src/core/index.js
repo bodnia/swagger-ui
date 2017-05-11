@@ -79,6 +79,8 @@ module.exports = function SwaggerUI(opts) {
   let queryConfig = parseSeach()
 
   system.initOAuth = system.authActions.configureAuth
+  system.ApiKeyAuthorization = system.authActions.ApiKeyAuthorization
+  system.PasswordAuthorization = system.authActions.PasswordAuthorization
 
   const downloadSpec = (fetchedConfig) => {
     if(typeof constructorConfig !== "object") {

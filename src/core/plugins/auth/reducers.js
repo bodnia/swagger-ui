@@ -1,4 +1,4 @@
-import { fromJS, Map } from "immutable"
+import { fromJS, Map, List } from "immutable"
 import { btoa } from "core/utils"
 
 import {
@@ -6,6 +6,7 @@ import {
   AUTHORIZE,
   AUTHORIZE_OAUTH2,
   LOGOUT,
+  LOGOUT_CUSTOM,
   CONFIGURE_AUTH
 } from "./actions"
 
@@ -15,29 +16,42 @@ export default {
   },
 
   [AUTHORIZE]: (state, { payload } ) =>{
+    const CUSTOM_AUTH = "__custom"
     let securities = fromJS(payload)
-    let map = state.get("authorized") || Map()
+    let authorized = state.get("authorized", Map())
+    let customAuths = authorized.get(CUSTOM_AUTH, List())
 
     // refactor withMutations
     securities.entrySeq().forEach( ([ key, security ]) => {
       let type = security.getIn(["schema", "type"])
-
       if ( type === "apiKey" ) {
-        map = map.set(key, security)
+        if ( key === CUSTOM_AUTH ) {
+          customAuths = customAuths.push(security)
+        } else {
+          authorized = authorized.set(key, security)
+        }
       } else if ( type === "basic" ) {
         let username = security.getIn(["value", "username"])
         let password = security.getIn(["value", "password"])
+        let val = {
+          value: {
+            username,
+            header: "Basic " + btoa(username + ":" + password)
+          },
+          name: key,
+          schema: security.get("schema")
+        }
 
-        map = map.setIn([key, "value"], {
-          username: username,
-          header: "Basic " + btoa(username + ":" + password)
-        })
-
-        map = map.setIn([key, "schema"], security.get("schema"))
+        if ( key === CUSTOM_AUTH ) {
+          customAuths = customAuths.push(val)
+        } else {
+          authorized = authorized.set(key, val)
+        }
       }
     })
 
-    return state.set( "authorized", map )
+    authorized = authorized.set(CUSTOM_AUTH, customAuths)
+    return state.set( "authorized", authorized )
   },
 
   [AUTHORIZE_OAUTH2]: (state, { payload } ) =>{
@@ -58,6 +72,13 @@ export default {
       })
 
     return state.set("authorized", result)
+  },
+  [LOGOUT_CUSTOM]: (state, { payload } ) =>{
+    let result = state.getIn(["authorized", "__custom"]).withMutations((authorized) => {
+        authorized.delete(payload)
+      })
+
+    return state.setIn(["authorized", "__custom"], result)
   },
 
   [CONFIGURE_AUTH]: (state, { payload } ) =>{

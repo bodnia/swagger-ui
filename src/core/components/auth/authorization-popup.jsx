@@ -10,7 +10,9 @@ export default class AuthorizationPopup extends React.Component {
   render() {
     let { authSelectors, authActions, getComponent, errSelectors, specSelectors, fn: { AST } } = this.props
     let definitions = authSelectors.shownDefinitions()
+    let customAuths = authSelectors.customAuthorized()
     const Auths = getComponent("auths")
+    const CustomAuths = getComponent("customAuths")
 
     return (
       <div className="dialog-ux">
@@ -38,6 +40,15 @@ export default class AuthorizationPopup extends React.Component {
                                   authSelectors={ authSelectors }
                                   authActions={ authActions }
                                   specSelectors={ specSelectors }/>
+                  })
+                }
+                {
+                  customAuths.valueSeq().map(( auth, key ) => {
+                    return <CustomAuths key={ key }
+                                        getComponent={ getComponent }
+                                        authActions={ authActions }
+                                        auth={ auth }
+                                        number={ key } />
                   })
                 }
               </div>

@@ -84,3 +84,8 @@ export const getConfigs = createSelector(
     state,
     auth => auth.get( "configs" )
 )
+
+export const customAuthorized = createSelector(
+    state,
+    auth => auth.getIn(["authorized", "__custom"], List())
+)

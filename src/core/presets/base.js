@@ -21,6 +21,7 @@ import ApiKeyAuth from "core/components/auth/api-key-auth"
 import BasicAuth from "core/components/auth/basic-auth"
 import Oauth2 from "core/components/auth/oauth2"
 import Clear from "core/components/clear"
+import CustomAuths from "core/components/auth/custom-auths"
 import LiveResponse from "core/components/live-response"
 import OnlineValidatorBadge from "core/components/online-validator-badge"
 import Operations from "core/components/operations"
@@ -65,6 +66,7 @@ export default function() {
       apiKeyAuth: ApiKeyAuth,
       basicAuth: BasicAuth,
       clear: Clear,
+      customAuths: CustomAuths,
       liveResponse: LiveResponse,
       info: Info,
       onlineValidatorBadge: OnlineValidatorBadge,

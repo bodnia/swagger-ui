@@ -4,6 +4,7 @@ import { btoa, buildFormData } from "core/utils"
 export const SHOW_AUTH_POPUP = "show_popup"
 export const AUTHORIZE = "authorize"
 export const LOGOUT = "logout"
+export const LOGOUT_CUSTOM = "logout_custom"
 export const PRE_AUTHORIZE_OAUTH2 = "pre_authorize_oauth2"
 export const AUTHORIZE_OAUTH2 = "authorize_oauth2"
 export const VALIDATE = "validate"
@@ -28,6 +29,13 @@ export function authorize(payload) {
 export function logout(payload) {
   return {
     type: LOGOUT,
+    payload: payload
+  }
+}
+
+export function logoutCustom(payload) {
+  return {
+    type: LOGOUT_CUSTOM,
     payload: payload
   }
 }
@@ -180,6 +188,45 @@ export const authorizeRequest = ( data ) => ( { fn, authActions, errActions, aut
 export function configureAuth(payload) {
   return {
     type: CONFIGURE_AUTH,
+    payload: payload
+  }
+}
+
+export function ApiKeyAuthorization(name, value, authIn) {
+  let payload = {
+    "__custom": {
+      name: "custom apiKey auth",
+      schema: {
+        type: "apiKey",
+        "in": authIn,
+        name
+      },
+      value
+    }
+  }
+
+  return {
+    type: AUTHORIZE,
+    payload: payload
+  }
+}
+
+export function PasswordAuthorization(username, password) {
+  let payload = {
+    "__custom": {
+      name: "custom basic auth",
+      value: {
+        username,
+        password
+      },
+      schema: {
+        type: "basic"
+      }
+    }
+  }
+
+  return {
+    type: AUTHORIZE,
     payload: payload
   }
 }
