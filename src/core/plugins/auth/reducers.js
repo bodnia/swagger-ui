@@ -33,14 +33,14 @@ export default {
       } else if ( type === "basic" ) {
         let username = security.getIn(["value", "username"])
         let password = security.getIn(["value", "password"])
-        let val = {
+        let val = fromJS({
           value: {
             username,
             header: "Basic " + btoa(username + ":" + password)
           },
           name: key,
           schema: security.get("schema")
-        }
+        })
 
         if ( key === CUSTOM_AUTH ) {
           customAuths = customAuths.push(val)

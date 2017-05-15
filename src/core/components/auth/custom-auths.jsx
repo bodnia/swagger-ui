@@ -15,7 +15,7 @@ export default class CustomAuth extends React.Component {
     authActions.logoutCustom(number)
   }
   render() {
-    let { number, auth, getComponent } = this.props
+    let { auth, getComponent } = this.props
     let schema = auth.schema || auth.get("schema")
     let value = auth.value || auth.get("value")
     let type = schema.get("type")
@@ -43,7 +43,7 @@ export default class CustomAuth extends React.Component {
           : <Row>
             <h4>Custom basic authorization</h4>
             <Row>
-              <p>Username: <code>{ value.username }</code></p>
+              <p>Username: <code>{ value.get("username") }</code></p>
             </Row>
             <Row>
               <p>Password: <code> ****** </code></p>

@@ -14,7 +14,7 @@ export default class BasicAuth extends React.Component {
     let { schema, name } = this.props
 
     let value = this.getValue()
-    let username = value.username
+    let username = value && value.get && value.get("username") || ""
 
     this.state = {
       name: name,
@@ -51,7 +51,8 @@ export default class BasicAuth extends React.Component {
     const AuthError = getComponent("authError")
     const JumpToPath = getComponent("JumpToPath", true)
     const Markdown = getComponent( "Markdown" )
-    let username = this.getValue().username
+    let value = this.getValue()
+    let username = value && value.get && value.get("username")
     let errors = errSelectors.allErrors().filter( err => err.get("authId") === name)
 
     return (
