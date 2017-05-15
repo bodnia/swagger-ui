@@ -75,6 +75,20 @@ To use swagger-ui's bundles, you should take a look at the [source of swagger-ui
   })
 ```
 
+#### Parameters
+
+Parameter Name | Description
+--- | ---
+url | The url pointing to API definition (normally `swagger.json` or `swagger.yaml`).
+spec | A JSON object describing the OpenAPI Specification. When used, the `url` parameter will not be parsed. This is useful for testing manually-generated specifications without hosting them.
+validatorUrl | By default, Swagger-UI attempts to validate specs against swagger.io's online validator. You can use this parameter to set a different validator URL, for example for locally deployed validators ([Validator Badge](https://github.com/swagger-api/validator-badge)). Setting it to `null` will disable validation.
+dom_id | The id of a dom element inside which SwaggerUi will put the user interface for swagger.
+oauth2RedirectUrl | OAuth redirect URL
+operationsSorter | Apply a sort to the operation list of each API. It can be 'alpha' (sort by paths alphanumerically), 'method' (sort by HTTP method) or a function (see Array.prototype.sort() to know how sort function works). Default is the order returned by the server unchanged.
+configUrl | Configs URL
+
+If you'd like to use the bundle files via npm, check out the [`swagger-ui-dist` package](https://www.npmjs.com/package/swagger-ui-dist).
+
 #### OAuth2 configuration
 You can configure OAuth2 authorization by calling `initOAuth` method with passed configs under the instance of `SwaggerUIBundle`
 default `client_id` and `client_secret`, `realm`, an application name `appName`, `scopeSeparator`, `additionalQueryStringParams`.
@@ -102,19 +116,14 @@ ui.initOAuth({
   })
 ```
 
-If you'd like to use the bundle files via npm, check out the [`swagger-ui-dist` package](https://www.npmjs.com/package/swagger-ui-dist).
+#### Authorization methods
 
-#### Parameters
-
-Parameter Name | Description
---- | ---
-url | The url pointing to API definition (normally `swagger.json` or `swagger.yaml`).
-spec | A JSON object describing the OpenAPI Specification. When used, the `url` parameter will not be parsed. This is useful for testing manually-generated specifications without hosting them.
-validatorUrl | By default, Swagger-UI attempts to validate specs against swagger.io's online validator. You can use this parameter to set a different validator URL, for example for locally deployed validators ([Validator Badge](https://github.com/swagger-api/validator-badge)). Setting it to `null` will disable validation.
-dom_id | The id of a dom element inside which SwaggerUi will put the user interface for swagger.
-oauth2RedirectUrl | OAuth redirect URL
-operationsSorter | Apply a sort to the operation list of each API. It can be 'alpha' (sort by paths alphanumerically), 'method' (sort by HTTP method) or a function (see Array.prototype.sort() to know how sort function works). Default is the order returned by the server unchanged.
-configUrl | Configs URL
+There are 2 ways to apply authorization to operation. The first is to authorize with a popup and the second is to call authorization methods on the instance of `SwaggerUIBundle` in `index.html` or `console`. 
+Applied authorizations will appear in authorization popup, to remove them and logout just click on button `Logout and remove`. _Note: these authorizations will be applied to all operations calls_
+`ui.ApiKeyAuthorization(name, value, in)` - to apply `apiKey` authorization. 
+`ui.PasswordAuthorization(username, password)` - to apply basic authorization. 
+For oauth2 please use `apiKey` authorization method:
+`ui.ApiKeyAuthorization("Authorization", "Bearer [token]", "query")`
 
 ### Plugins
 
